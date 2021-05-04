@@ -8,25 +8,35 @@
     <body>
         <p>My Library</p>
 
-        <div class="add-button">Add Book</div>
+        <div class="add-new-book-button">Add Book</div>
         
         <div class="modal">
             <div class="modal-content">
-                <div class="close">&times;</div>
+
                 <div class="modal-header">
                     <div>Add Book</div>
+                    <div class="close">&times;</div>
                 </div>
 
                 <div class="modal-body">
-                    <div>Enter info here</div>
+                    <input type="text" name="title" placeholder="Title">
+                    <input type="text" name="author" placeHolder="Author">
+                    <input type="number" name="pages" placeholder="0">
+                    <select name="status">
+                        <option value="read">Already read</option>
+                        <option value="not read">Not read</option>
+                    </select>
                 </div>
 
                 <div class="modal-footer">
-                    <div class="submit">Add</div>
+                    <div class="submit">Add To Library</div>
                 </div>
 
             </div>
         </div>
+
+
+        <div class="bookshelf"></div>
 
     </body>
 </html>

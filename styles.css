@@ -4,10 +4,23 @@ html {
     font-family: 'Raleway', sans-serif;
 }
 
-.add-button {
+.add-new-book-button {
     cursor: pointer;
     border: 1px solid black;
     width: fit-content;
+}
+
+.bookshelf {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,10rem);
+    grid-template-rows: auto;
+    gap: 1rem;
+}
+
+.book {
+    border: 1px solid black;
+    width: 10rem;
+    height: 16rem;
 }
 
 .modal {
@@ -18,19 +31,39 @@ html {
     width: 100%;
     height: 100%;
     z-index: 1;
-    background-color: rgba(255,255,255,50%);
+    background-color: rgba(240,240,240,50%);
     backdrop-filter: blur(1px);
     overflow: auto;
 }
 
 .modal-content {
+    padding: 1rem;
     margin: 10% auto;
     border: 1px solid black;
     width: 20rem;
     background-color: white;
 }
 
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body input, select {
+    font-family: inherit;
+    margin: 1rem 0;
+    width: 16rem;
+}
+
 .close {
+    font-size: 2rem;
     float: right;
     cursor: pointer;
 }
