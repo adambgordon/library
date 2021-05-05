@@ -29,14 +29,24 @@ function initBookshelf() {
     library.forEach(element => {
         const book = document.createElement("div");
         book.classList.add("book");
-        
-        book.textContent = element.title;
 
+        book.textContent = element.title;
 
         bookshelf.appendChild(book);
     });
 }
 
+function addBookElementToPage(bookObj) {
+    const bookshelf = document.querySelector(".bookshelf");
+    const bookElement = document.createElement("div");
+    bookElement.classList.add("book");
+    bookElement.textContent = bookObj.title;
+    bookshelf.appendChild(bookElement);
+}
+
+function deleteBookElement(timestamp) {
+
+}
 
 function initModalDialog () {
     const addNewBookButton = document.querySelector(".add-new-book-button");
@@ -54,6 +64,7 @@ function initModalDialog () {
         const book = new Book (getInputTitle(), getInputAuthor(), getInputPages(), getInputStatus(), Date.now());
         modal.style.display = "none";
         book.addToLibrary();
+        addBookElementToPage(book);
         clearInputs();
         console.table(library);
     }
