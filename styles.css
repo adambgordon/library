@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
 
 html {
     font-family: 'Raleway', sans-serif;
@@ -17,13 +19,13 @@ html {
     border-bottom: 1px solid lightgrey;
 }
 
-.title, .add-new-book-button {
+.heading, .add-new-book-button {
     display: inline-block;
     /* position: relative;
     top: 1rem; */
 }
 
-.title {
+.heading {
     font-size: 2.5rem;
 }
 
@@ -55,6 +57,34 @@ html {
     border: 1px solid black;
     width: 14rem;
     height: 16rem;
+    position: relative;
+}
+
+.book div {
+    padding: 1rem;
+}
+
+.remove, .edit {
+    position: absolute;
+    padding: 0 !important;
+    cursor: pointer;
+    display: none;
+}
+
+.remove {
+    font-weight: 200;
+    font-size: 2rem;
+    top: 0;
+    right: 10px;
+}
+.edit {
+    font-size: 1rem;
+    top: 40px;
+    right: 10px;
+}
+
+.book:hover .remove , .book:hover .edit{
+    display: block;
 }
 
 .modal {
@@ -99,5 +129,9 @@ html {
 .close {
     font-size: 2rem;
     float: right;
+    cursor: pointer;
+}
+
+.submit {
     cursor: pointer;
 }
