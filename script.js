@@ -48,7 +48,7 @@ function addBookToDOM(bookObj) {
     title.classList.add("title");
     author.classList.add("author");
     pages.classList.add("pages");
-    status.classList.add("pages");
+    status.classList.add("status");
 
     book.id = bookObj.timestamp;
     remove.textContent = "\u00d7";
@@ -87,31 +87,24 @@ function removeBook() {
 }
 
 function editBook() {
-    let book;
-    for (let i = 0; i < library.length; i++) {
-        if (library[i].timestamp.toString() === this.parentElement.id) {
-            book = library[i];
-            break;
-        }
-    }
+    const book = getBookByTimestamp(this.parentElement.id);
 
-    const modal = document.querySelector(".modal");
-    const submitButton = document.querySelector(".submit");
-    const updateButton = document.querySelector(".update");
+    hideSubmitButton();
+    displayModalDialog();
+    displayUpdateButton();
 
-    submitButton.style.display = "none";
-    modal.style.display = "block";
-    updateButton.style.display = "block";
-
-    console.log(typeof(book.pages));
-
-
-    updateButton.dataset.timestamp = book.timestamp;
     setInputTitle(book.title);
     setInputAuthor(book.author);
     setInputPages(book.pages);
     setInputStatus(book.status);
+    setUpdateTimestamp(book.timestamp);
 
+}
+
+function getBookByTimestamp(timestamp) {
+    for (let i = 0; i < library.length; i++) {
+        if (library[i].timestamp.toString() === timestamp) return library[i];
+    }
 }
 
 function initModalDialog () {
@@ -159,7 +152,6 @@ function update() {
     const status = getInputStatus();
     clearInputs();
 
-    console.log(typeof(pages));
     for (let i = 0; i < library.length; i++) {
         if (library[i].timestamp.toString() === timestamp) {
             library[i].title = title;
@@ -176,15 +168,37 @@ function update() {
     book.querySelector(".pages").textContent = pages + " pp";
 
     if (status === "read") {
-        book.querySelector(".pages").textContent = "Already read";
+        book.querySelector(".status").textContent = "Already read";
     } else {
-        book.querySelector(".pages").textConten = "Not read";
+        book.querySelector(".status").textContent = "Not read";
     }
-
-    console.table(library);
 }
 
-  
+function displayModalDialog() {
+    document.querySelector(".modal").style.display = "block";
+}
+function hideModalDialog() {
+    document.querySelector(".modal").style.display = "none";
+}
+function displaySubmitButton() {
+    document.querySelector(".submit").style.display = "block";
+}
+function hideSubmitButton() {
+    document.querySelector(".submit").style.display = "none";
+}
+function displayUpdateButton() {
+    document.querySelector(".update").style.display = "block";
+}
+function hideUpdateButton() {
+    document.querySelector(".update").style.display = "none";
+}
+function getUpdateTimestamp() {
+    return document.querySelector(".update").dataset.timestamp;
+}
+function setUpdateTimestamp(value) {
+    document.querySelector(".update").dataset.timestamp = value;
+}
+
 
 function submit () {
     const book = new Book (getInputTitle(), getInputAuthor(), getInputPages(), getInputStatus(), Date.now());
