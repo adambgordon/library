@@ -1,5 +1,4 @@
 /* MAIN CODE */
-
 let library = [];
 function LibraryItem () {
 }
@@ -14,12 +13,14 @@ function Book (title, author, pages, status, timestamp) {
     this.timestamp = timestamp;
 }
 Book.prototype = Object.create(LibraryItem.prototype);
+
+initModalDialog();
+
+
 const book1 = new Book ("The Martian", "Andy Weir", 369, "read", Date.now()-1);
 const book2 = new Book ("Sapiens", "Yuval Noah Harari", 443, "not read", Date.now());
 book1.addToLibrary();
 book2.addToLibrary();
-
-initModalDialog();
 initBookshelf();
 
 
@@ -31,9 +32,15 @@ function initBookshelf() {
     });
 }
 
-function addBookToDOM(bookObj) {
-    const bookshelf = document.querySelector(".bookshelf");
-    const book = document.createElement("div");
+function initModalDialog () {
+    initAddNewBookButton();
+    initSubmitButton();
+    initClickToClose();
+    initKeyboardInput();
+}
+
+function addBookToDOM(book) {
+    const bookElement = document.createElement("div");
     const remove = document.createElement("div");
     const edit = document.createElement("div");
     const title = document.createElement("div");
@@ -41,7 +48,7 @@ function addBookToDOM(bookObj) {
     const pages = document.createElement("div");
     const status = document.createElement("div");
 
-    book.classList.add("book");
+    bookElement.classList.add("book");
     remove.classList.add("remove");
     edit.classList.add("edit");
     edit.classList.add("material-icons")
@@ -50,29 +57,37 @@ function addBookToDOM(bookObj) {
     pages.classList.add("pages");
     status.classList.add("status");
 
-    book.id = bookObj.timestamp;
+    bookElement.appendChild(remove);
+    bookElement.appendChild(edit);
+    bookElement.appendChild(title);
+    bookElement.appendChild(author);
+    bookElement.appendChild(pages);
+    bookElement.appendChild(status);
+
+    document.querySelector(".bookshelf").appendChild(bookElement);
+    bookElement.id = book.timestamp;
+
     remove.textContent = "\u00d7";
     edit.textContent = "edit";
-    title.textContent = bookObj.title;
-    author.textContent = bookObj.author;
-    pages.textContent = bookObj.pages + " pp";
-    if (bookObj.status === "read") {
-        status.textContent = "Already read";
-    } else {
-        status.textContent = "Not read";
-    }
-
-    book.appendChild(remove);
-    book.appendChild(edit);
-    book.appendChild(title);
-    book.appendChild(author);
-    book.appendChild(pages);
-    book.appendChild(status);
-
-    bookshelf.appendChild(book);
+    updateBookInDOM(book);
 
     remove.onclick = removeBook;
     edit.onclick = editBook;
+}
+
+
+// Removes book from library array and from DOM
+function updateBookInDOM(book) {
+    const bookElement = document.querySelector(`[id="${book.timestamp}"]`);
+    bookElement.querySelector(".title").textContent = book.title;
+    bookElement.querySelector(".author").textContent = book.author;
+    bookElement.querySelector(".pages").textContent = book.pages + " pp";
+    if (book.status === "read") {
+        bookElement.querySelector(".status").textContent = "Already read";
+    } else {
+        bookElement.querySelector(".status").textContent = "Not read";
+    }
+    clearModalTimestamp();
 }
 
 function removeBook() {
@@ -87,127 +102,93 @@ function removeBook() {
 }
 
 function editBook() {
-    const book = getBookByTimestamp(this.parentElement.id);
-
-    hideSubmitButton();
+    setInputs(getBookByTimestamp(this.parentElement.id));
+    setSubmitButtonText("Update");
     displayModalDialog();
-    displayUpdateButton();
-
-    setInputTitle(book.title);
-    setInputAuthor(book.author);
-    setInputPages(book.pages);
-    setInputStatus(book.status);
-    setUpdateTimestamp(book.timestamp);
-
 }
+
+function submit () {
+    hideModalDialog();
+    const book = getInputs();
+    clearInputs();
+    if (book.timestamp === "") {
+        book.timestamp = Date.now();
+        book.addToLibrary();
+        addBookToDOM(book);
+    } else {
+        const existingBook = getBookByTimestamp(book.timestamp);
+        existingBook.title = book.title;
+        existingBook.author = book.author;
+        existingBook.pages = book.pages;
+        existingBook.status = book.status;
+        existingBook.timestamp = book.timestamp;
+        updateBookInDOM(existingBook);
+    }
+}
+
+
+function initAddNewBookButton() {
+    const addNewBookButton = document.querySelector(".add-new-book-button");
+    addNewBookButton.onclick = () => {
+        setSubmitButtonText("Add to library");
+        displayModalDialog();
+    }
+}
+function initSubmitButton() {
+    const submitButton = document.querySelector(".submit");
+    submitButton.onclick = submit;
+}
+function initClickToClose() {
+    const modal = document.querySelector(".modal");
+    const close = document.querySelector(".close");
+    window.onclick = function (event) { // make separate fn
+        if (event.target === modal || event.target === close) {
+            hideModalDialog();
+            clearInputs();
+        }
+    }
+}
+function initKeyboardInput() {
+    const modal = document.querySelector(".modal");
+    window.onkeydown = function (event) { // make separate fn
+        if (modal.style.display === "block") {
+            if (event.key === "Enter") {
+                submit();
+            } else if (event.key === "Escape") {
+                hideModalDialog();
+                clearInputs();
+            }
+        } 
+    }
+}
+
 
 function getBookByTimestamp(timestamp) {
     for (let i = 0; i < library.length; i++) {
         if (library[i].timestamp.toString() === timestamp) return library[i];
     }
 }
-
-function initModalDialog () {
-    const addNewBookButton = document.querySelector(".add-new-book-button");
-    const modal = document.querySelector(".modal");
-    const close = document.querySelector(".close");
-    const submitButton = document.querySelector(".submit");
-    const updateButton = document.querySelector(".update");
-
-    addNewBookButton.onclick = () => {
-        updateButton.style.display = "none";
-        modal.style.display = "block";
-        submitButton.style.display = "block";
-    }
-    window.onclick = function (event) { // make separate fn
-        if (event.target === modal || event.target === close) modal.style.display = "none";
-    }
-    window.onkeydown = function (event) { // make separate fn
-        if (modal.style.display === "block") {
-            if (event.key === "Enter") {
-                if (submitButton.style.display === "block") {
-                    submit();
-                } else if (updateButton.style.display === "block") {
-                    update();
-                }
-            } else if (event.key === "Escape") {
-                modal.style.display = "none";
-            }
-        } 
-    }
-    submitButton.onclick = submit;
-    updateButton.onclick = update;
+function clearModalTimestamp() {
+    setModalTimestamp("");
 }
-
-function update() {
-    const modal = document.querySelector(".modal");
-    modal.style.display = "none";
-
-    const updateButton = document.querySelector(".update");
-
-    const timestamp = updateButton.dataset.timestamp;
-    const title = getInputTitle();
-    const author = getInputAuthor();
-    const pages = Number(getInputPages());
-    const status = getInputStatus();
-    clearInputs();
-
-    for (let i = 0; i < library.length; i++) {
-        if (library[i].timestamp.toString() === timestamp) {
-            library[i].title = title;
-            library[i].author = author;
-            library[i].pages = pages;
-            library[i].status = status;
-            break;
-        }
-    }
-    const book = document.querySelector(`[id="${timestamp}"]`);
-
-    book.querySelector(".title").textContent = title;
-    book.querySelector(".author").textContent = author;
-    book.querySelector(".pages").textContent = pages + " pp";
-
-    if (status === "read") {
-        book.querySelector(".status").textContent = "Already read";
-    } else {
-        book.querySelector(".status").textContent = "Not read";
-    }
+function setModalTimestamp(timestamp) {
+    document.querySelector(".modal").dataset.timestamp = timestamp;
 }
-
+function getModalTimestamp() {
+    let timestamp = document.querySelector(".modal").dataset.timestamp;
+    if (typeof(timestamp) === "undefined") timestamp = "";
+    return timestamp;
+}
 function displayModalDialog() {
     document.querySelector(".modal").style.display = "block";
 }
 function hideModalDialog() {
     document.querySelector(".modal").style.display = "none";
 }
-function displaySubmitButton() {
-    document.querySelector(".submit").style.display = "block";
-}
-function hideSubmitButton() {
-    document.querySelector(".submit").style.display = "none";
-}
-function displayUpdateButton() {
-    document.querySelector(".update").style.display = "block";
-}
-function hideUpdateButton() {
-    document.querySelector(".update").style.display = "none";
-}
-function getUpdateTimestamp() {
-    return document.querySelector(".update").dataset.timestamp;
-}
-function setUpdateTimestamp(value) {
-    document.querySelector(".update").dataset.timestamp = value;
+function setSubmitButtonText(text) {
+    document.querySelector(".submit").textContent = text;
 }
 
-
-function submit () {
-    const book = new Book (getInputTitle(), getInputAuthor(), getInputPages(), getInputStatus(), Date.now());
-    const modal = document.querySelector(".modal");
-    modal.style.display = "none";
-    book.addToLibrary();
-    addBookToDOM(book);
-    clearInputs();
-}
 
 function clearInputs() {
     setInputTitle("");
@@ -215,7 +196,16 @@ function clearInputs() {
     setInputPages("");
     setInputStatus("read");
 }
-
+function setInputs(book) {
+    setInputTitle(book.title);
+    setInputAuthor(book.author);
+    setInputPages(book.pages);
+    setInputStatus(book.status);
+    setModalTimestamp(book.timestamp);
+}
+function getInputs() {
+    return new Book (getInputTitle(), getInputAuthor(), getInputPages(), getInputStatus(), getModalTimestamp());
+}
 function getInputTitle() {
     return document.querySelector('input[name="title"]').value;
 }
