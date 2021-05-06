@@ -8,29 +8,29 @@ html {
 
 .top-nav {
     height: 4rem;
-    /* display: inline; */
-    /* display: inline-block; */
-    /* justify-content: space-between; */
-    /* font-size: 3rem; */
-    
-    /* align-items: center; */
-    /* padding: 1rem; */
-    margin:2rem;
     border-bottom: 1px solid lightgrey;
 }
 
-.heading, .add-new-book-button {
+.heading-left, .heading-right{
     display: inline-block;
-    /* position: relative;
-    top: 1rem; */
 }
 
-.heading {
+.heading-left {
     font-size: 2.5rem;
 }
 
-.add-new-book-button {
+.heading-right {
     float: right;
+}
+
+.sort {
+    cursor: pointer;
+    border: 1px solid black;
+    font-size: 1.5rem;  
+    padding: 0.5rem;
+}
+
+.add-new-book-button {
     cursor: pointer;
     border: 1px solid black;
     font-size: 1.5rem;  

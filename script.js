@@ -14,6 +14,9 @@ function Book (title, author, pages, status, timestamp) {
 }
 Book.prototype = Object.create(LibraryItem.prototype);
 
+
+initAddNewBookButton();
+initSortButton();
 initModalDialog();
 
 
@@ -33,7 +36,6 @@ function initBookshelf() {
 }
 
 function initModalDialog () {
-    initAddNewBookButton();
     initSubmitButton();
     initClickToClose();
     initKeyboardInput();
@@ -126,6 +128,53 @@ function submit () {
     }
 }
 
+function extractBookElements () {
+    let books = [];
+    const bookshelf = getBookshelfElement();
+    while (bookshelf.firstChild) {
+        books.push(bookshelf.removeChild(bookshelf.firstChild));
+    }
+    return books;
+}
+
+function attachBookElements(books) {
+    const bookshelf = getBookshelfElement();
+    for (let i = 0; i < books.length; i++) {
+        bookshelf.appendChild(books[i]);
+    }
+}
+
+function getBookshelfElement () {
+    return document.querySelector(".bookshelf");
+}
+
+
+
+function sortBooks() {
+    // console.log(getInputSortBy());
+    let sorted = extractBookElements();
+    switch (getInputSortBy()) {
+        case "date":
+            sorted.sort( (a,b) => {
+                return a.id < b.id ? -1 : 1;
+            });
+            break;
+        case "title":
+            sorted.sort( (a,b) => {
+                return a.querySelector(".title").textContent < b.querySelector(".title").textContent ? -1 : 1;
+            });
+            break;
+        case "author":
+            break;
+    }
+    attachBookElements(sorted);
+}
+
+
+function initSortButton() {
+    const sortButton = document.querySelector(".sort");
+    sortButton.onchange = sortBooks;
+}
 
 function initAddNewBookButton() {
     const addNewBookButton = document.querySelector(".add-new-book-button");
@@ -189,6 +238,9 @@ function setSubmitButtonText(text) {
     document.querySelector(".submit").textContent = text;
 }
 
+function getInputSortBy() {
+    return document.querySelector('select[name="sort"]').value;
+}
 
 function clearInputs() {
     setInputTitle("");
