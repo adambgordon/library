@@ -149,9 +149,7 @@ function getBookshelfElement () {
 }
 
 
-
 function sortBooks() {
-    // console.log(getInputSortBy());
     let sorted = extractBookElements();
     switch (getInputSortBy()) {
         case "date":
@@ -165,6 +163,9 @@ function sortBooks() {
             });
             break;
         case "author":
+            sorted.sort( (a,b) => {
+                return a.querySelector(".author").textContent.split(" ").pop() < b.querySelector(".author").textContent.split(" ").pop() ? -1 : 1;
+            });
             break;
     }
     attachBookElements(sorted);
