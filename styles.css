@@ -6,13 +6,21 @@ html {
     font-family: 'Raleway', sans-serif;
 }
 
-.top-nav {
+.top-nav-wrapper {
     height: 4rem;
-    border-bottom: 1px solid lightgrey;
+    border-bottom: 1px solid rgb(188, 188, 188);
+    display: block;
+    width: 95%;
+    margin: 2rem auto;
 }
 
-.heading-left, .heading-right{
-    display: inline-block;
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.heading-left, .heading-right {
+    margin: 0 1rem;
 }
 
 .heading-left {
@@ -20,22 +28,42 @@ html {
 }
 
 .heading-right {
-    float: right;
+    display: flex;
+    align-items: center;
 }
+
 
 .sort {
     cursor: pointer;
-    border: 1px solid black;
-    font-size: 1.5rem;  
-    padding: 0.5rem;
+    border: none;
+    border-bottom: 1px solid black;
+    font-size: 1rem;  
+    width: fit-content;
+    margin: 0 8rem 0 1rem;
+    padding-right: 0.5rem;
 }
 
-.add-new-book-button {
-    cursor: pointer;
-    border: 1px solid black;
-    font-size: 1.5rem;  
-    padding: 0.5rem;
+select:focus, input:focus {
+    outline: none;
 }
+
+select[name="sort"] {
+    font-weight: 200;
+    font-family: inherit;
+}
+
+.add-new-book-button, .submit {
+    cursor: pointer;
+    font-size: .9rem;
+    letter-spacing: 1px;
+    padding: 0.5rem 1rem;
+    background-color: rgb(233, 233, 233);
+    border-radius: 3px;
+}
+.add-new-book-button:hover, .submit:hover, select:hover {
+    color: rgb(233, 163, 1);
+}
+
 
 
 .bookshelf {
@@ -54,37 +82,68 @@ html {
 }
 
 .book {
-    border: 1px solid black;
-    width: 14rem;
-    height: 16rem;
+    width: 11rem;
+    height: 13rem;
+    padding: 1.5rem;
     position: relative;
+    border-radius: 6px;
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 3px 2px rgb(233, 233, 233);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgb(244,244,244);
 }
 
 .book div {
-    padding: 1rem;
+    text-align: center;
+    min-height: 1rem;
+    height: fit-content;
+}
+
+.title {
+    font-weight: 700;
+}
+
+.author, .pages {
+    font-weight: 400;
+}
+
+.status {
+    font-weight: 100;
 }
 
 .remove, .edit {
     position: absolute;
-    padding: 0 !important;
+    /* padding: 0 !important; */
     cursor: pointer;
     display: none;
+    color:rgb(188, 188, 188);
 }
 
 .remove {
     font-weight: 200;
     font-size: 2rem;
-    top: 0;
-    right: 10px;
+    top: -8px;
+    right: 6px;
 }
 .edit {
     font-size: 1rem;
-    top: 40px;
-    right: 10px;
+    top: 6px;
+    left: 8px;
 }
 
 .book:hover .remove , .book:hover .edit{
     display: block;
+}
+.book:hover {
+    box-shadow: none;
+}
+.remove:hover, .close:hover {
+    color: red;
+}
+.edit:hover {
+    color: rgb(255, 200, 0);
 }
 
 .modal {
@@ -95,43 +154,78 @@ html {
     width: 100%;
     height: 100%;
     z-index: 1;
-    background-color: rgba(240,240,240,50%);
+    background-color: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(1px);
     overflow: auto;
+    
 }
 
-.modal-content {
-    padding: 1rem;
-    margin: 10% auto;
-    border: 1px solid black;
+.modal-wrapper {
+    position: relative;
+    margin: 6% auto 0;
+    border-radius: 6px;
+    border: 1px solid lightgray;
+    box-shadow: 0 0 10px 2px lightgray;
     width: 20rem;
+    height: 25rem;
     background-color: white;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 
 .modal-body {
+    font-size: 1rem;
+    margin: 2rem;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    height: 21rem;
 }
 
-.modal-body input, select {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.modal-body input, select[name="status"] {
     font-family: inherit;
-    margin: 1rem 0;
-    width: 16rem;
+    font-size: inherit;
+    height: 2rem;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.modal-middle {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.modal-middle input {
+    width: 3rem;
+    text-align: center;
+}
+
+.pp {
+    margin: 0 auto 0.25rem 0.5rem;
+}
+
+select[name="status"] {
+    cursor: pointer;
+    width: 8rem;
 }
 
 .close {
+    position: absolute;
+    top: 0px;
+    right: 12px;
     font-size: 2rem;
-    float: right;
+    font-weight: 200;
     cursor: pointer;
+    color:rgb(188, 188, 188);
 }
 
-.submit {
-    cursor: pointer;
+
+.modal-bottom {
+    margin: 0 auto;
 }

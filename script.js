@@ -83,7 +83,7 @@ function updateBookInDOM(book) {
     const bookElement = document.querySelector(`[id="${book.timestamp}"]`);
     bookElement.querySelector(".title").textContent = book.title;
     bookElement.querySelector(".author").textContent = book.author;
-    bookElement.querySelector(".pages").textContent = book.pages + " pp";
+    if (book.pages > 0) bookElement.querySelector(".pages").textContent = book.pages + " pp";
     if (book.status === "read") {
         bookElement.querySelector(".status").textContent = "Already read";
     } else {
@@ -105,7 +105,7 @@ function removeBook() {
 
 function editBook() {
     setInputs(getBookByTimestamp(this.parentElement.id));
-    setSubmitButtonText("Update");
+    setSubmitButtonText("UPDATE");
     displayModalDialog();
 }
 
@@ -167,6 +167,19 @@ function sortBooks() {
                 return a.querySelector(".author").textContent.split(" ").pop() < b.querySelector(".author").textContent.split(" ").pop() ? -1 : 1;
             });
             break;
+        case "unread":
+            sorted.sort( (a,b) => {
+                const unread = "Not read";
+                const read = "Already read";
+                if ( a.querySelector(".status").textContent === unread && b.querySelector(".status").textContent === read) {
+                    return -1;
+                }
+                if ( a.querySelector(".status").textContent === read && b.querySelector(".status").textContent === unread) {
+                    return 1;
+                }
+                return 0;
+            });
+            break;
     }
     attachBookElements(sorted);
 }
@@ -180,7 +193,7 @@ function initSortButton() {
 function initAddNewBookButton() {
     const addNewBookButton = document.querySelector(".add-new-book-button");
     addNewBookButton.onclick = () => {
-        setSubmitButtonText("Add to library");
+        setSubmitButtonText("ADD TO LIBRARY");
         displayModalDialog();
     }
 }
@@ -194,6 +207,7 @@ function initClickToClose() {
     window.onclick = function (event) { // make separate fn
         if (event.target === modal || event.target === close) {
             hideModalDialog();
+            clearModalTimestamp();
             clearInputs();
         }
     }
@@ -206,6 +220,7 @@ function initKeyboardInput() {
                 submit();
             } else if (event.key === "Escape") {
                 hideModalDialog();
+                clearModalTimestamp();
                 clearInputs();
             }
         } 

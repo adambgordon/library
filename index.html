@@ -6,41 +6,44 @@
         <script src="script.js" defer></script>
     </head>
     <body>
-        <div class="top-nav">
-            <div class="heading-left">My Library</div>
-            <div class="heading-right">
-                <div>Sort by</div>
-                <select name="sort" class="sort">
-                    <option value="date">Date added</option>
-                    <option value="title">Title</option>
-                    <option value="author">Author</option>
-                </select>
-                <div class="add-new-book-button">Add Book</div>
+        
+        <div class="top-nav-wrapper">
+            <div class="top-nav">
+                <div class="heading-left">My Library</div>
+
+                <div class="heading-right">
+                    <div>Sort by</div>
+                    <select name="sort" class="sort">
+                        <option value="date">Date added</option>
+                        <option value="title">Title</option>
+                        <option value="author">Author</option>
+                        <option value="unread">Unread</option>                        
+                    </select>
+                    <div class="add-new-book-button">ADD BOOK</div>
+                </div>
+
             </div>
         </div>
 
         <div class="modal">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <div>Add Book</div>
-                    <div class="close">&times;</div>
-                </div>
-
+            <div class="modal-wrapper">
+                <div class="close">&times;</div>
                 <div class="modal-body">
                     <input type="text" name="title" placeholder="Title">
                     <input type="text" name="author" placeHolder="Author">
-                    <input type="number" name="pages" placeholder="0">
-                    <select name="status">
-                        <option value="read">Already read</option>
-                        <option value="not read">Not read</option>
-                    </select>
-                </div>
+                    <div class="modal-middle">
+                        <input type="number" name="pages" placeholder="0">
+                        <div class="pp">pp</div>
+                        <select name="status">
+                            <option value="read">Already read</option>
+                            <option value="not read">Not read</option>
+                        </select>
+                    </div>
+                    <div class="modal-bottom">
+                        <div class="submit"></div>
+                    </div>
 
-                <div class="modal-footer">
-                    <div class="submit"></div>
                 </div>
-
             </div>
         </div>
 
