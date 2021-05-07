@@ -69,7 +69,7 @@ function addBookToDOM(book) {
     document.querySelector(".bookshelf").appendChild(bookElement);
     bookElement.id = book.timestamp;
 
-    remove.textContent = "\u00d7";
+    remove.textContent = "+";
     edit.textContent = "edit";
     updateBookInDOM(book);
 

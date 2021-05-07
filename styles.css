@@ -48,6 +48,7 @@ select:focus, input:focus {
 }
 
 select[name="sort"] {
+    font-size: 1rem;
     font-weight: 200;
     font-family: inherit;
 }
@@ -113,17 +114,39 @@ select[name="sort"] {
     font-weight: 100;
 }
 
+@keyframes spin-360 {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
+}
+@keyframes spin-x {
+    from {
+        transform: rotate(45deg);
+    }
+    to {
+        transform: rotate(225deg);}
+}
+
 .remove, .edit {
-    position: absolute;
-    /* padding: 0 !important; */
+    position: absolute; 
     cursor: pointer;
     display: none;
     color:rgb(188, 188, 188);
 }
 
-.remove {
+.edit:hover {
+    color: rgb(255, 200, 0);
+    animation: spin-360 400ms 100ms 1;
+}
+.remove:hover, .close:hover {
+    color: red;
+    animation: spin-x 300ms 100ms 1 ease;
+}
+.remove, .close {
+    font-size: 2.5rem;
     font-weight: 200;
-    font-size: 2rem;
+    transform: rotate(45deg);
+}
+.remove {
     top: -8px;
     right: 6px;
 }
@@ -138,12 +161,6 @@ select[name="sort"] {
 }
 .book:hover {
     box-shadow: none;
-}
-.remove:hover, .close:hover {
-    color: red;
-}
-.edit:hover {
-    color: rgb(255, 200, 0);
 }
 
 .modal {
@@ -219,8 +236,6 @@ select[name="status"] {
     position: absolute;
     top: 0px;
     right: 12px;
-    font-size: 2rem;
-    font-weight: 200;
     cursor: pointer;
     color:rgb(188, 188, 188);
 }
