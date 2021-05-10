@@ -20,12 +20,11 @@ initSortButton();
 initModalDialog();
 
 
-const book1 = new Book ("The Martian", "Andy Weir", 369, "read", Date.now()-1);
-const book2 = new Book ("Sapiens", "Yuval Noah Harari", 443, "not read", Date.now());
+const book1 = new Book ("The Martian", "Andy Weir", 369, "read", 123);
+const book2 = new Book ("Sapiens", "Yuval Noah Harari", 443, "not read", 124);
 book1.addToLibrary();
 book2.addToLibrary();
 initBookshelf();
-
 
 /* FUNCTIONS */
 function initBookshelf() {
@@ -78,7 +77,6 @@ function addBookToDOM(book) {
 }
 
 
-// Removes book from library array and from DOM
 function updateBookInDOM(book) {
     const bookElement = document.querySelector(`[id="${book.timestamp}"]`);
     bookElement.querySelector(".title").textContent = book.title;
@@ -89,18 +87,32 @@ function updateBookInDOM(book) {
     } else {
         bookElement.querySelector(".status").textContent = "Not read";
     }
+    updateBookInStorage(book);
     clearModalTimestamp();
 }
 
+
+
+// Removes book from library array and from DOM
 function removeBook() {
     const book = this.parentElement;
     for (let i = 0; i < library.length; i++) {
         if (library[i].timestamp.toString() === book.id) {
-            library.splice(i,1);
+            removeBookInStorage(library.splice(i,1)[0]);
             break;
         }
     }
     book.remove();
+    console.table(localStorage);
+}
+
+function removeBookInStorage (book) {
+    if(storageAvailable("localStorage")) {
+        localStorage.removeItem(`${book.timestamp}:title`);
+        localStorage.removeItem(`${book.timestamp}:author`);
+        localStorage.removeItem(`${book.timestamp}:status`);
+        localStorage.removeItem(`${book.timestamp}:pages`);
+    }
 }
 
 function editBook() {
@@ -126,6 +138,16 @@ function submit () {
         existingBook.timestamp = book.timestamp;
         updateBookInDOM(existingBook);
     }
+}
+
+function updateBookInStorage(book) {
+    if(storageAvailable("localStorage")) {
+        localStorage.setItem(`${book.timestamp}:title`,book.title);
+        localStorage.setItem(`${book.timestamp}:author`,book.author);
+        localStorage.setItem(`${book.timestamp}:pages`,book.pages);
+        localStorage.setItem(`${book.timestamp}:status`,book.status);
+    }
+    console.table(localStorage);
 }
 
 function extractBookElements () {
@@ -297,4 +319,31 @@ function setInputPages(text) {
 }
 function setInputStatus(text) {
     document.querySelector('select[name="status"]').value = text;
+}
+
+
+
+function storageAvailable(type) {
+    var storage;
+    try {
+        storage = window[type];
+        var x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            (storage && storage.length !== 0);
+    }
 }

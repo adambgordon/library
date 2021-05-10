@@ -32,7 +32,9 @@ html {
     align-items: center;
 }
 
-
+option {
+    color:blue;
+}
 .sort {
     cursor: pointer;
     border: none;
@@ -65,11 +67,9 @@ select[name="sort"] {
     color: rgb(233, 163, 1);
 }
 
-
-
 .bookshelf {
     position: fixed;
-    top: 6rem;
+    top: 97px;
     bottom: 0;
     left: 0;
     right: 0;
@@ -139,7 +139,7 @@ select[name="sort"] {
 }
 .remove:hover, .close:hover {
     color: red;
-    animation: spin-x 300ms 100ms 1 ease;
+    animation: spin-x 400ms 100ms 1 ease;
 }
 .remove, .close {
     font-size: 2.5rem;
