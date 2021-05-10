@@ -20,14 +20,16 @@ initSortButton();
 initModalDialog();
 
 
-const book1 = new Book ("The Martian", "Andy Weir", 369, "read", 123);
-const book2 = new Book ("Sapiens", "Yuval Noah Harari", 443, "not read", 124);
-book1.addToLibrary();
-book2.addToLibrary();
+// const book1 = new Book ("The Martian", "Andy Weir", 369, "read", 123);
+// const book2 = new Book ("Sapiens", "Yuval Noah Harari", 443, "not read", 124);
+// book1.addToLibrary();
+// book2.addToLibrary();
+
 initBookshelf();
 
 /* FUNCTIONS */
 function initBookshelf() {
+    addBooksFromStorage();
     const bookshelf = document.querySelector(".bookshelf");
     library.forEach(element => {
         addBookToDOM(element);
@@ -103,7 +105,6 @@ function removeBook() {
         }
     }
     book.remove();
-    console.table(localStorage);
 }
 
 function removeBookInStorage (book) {
@@ -112,6 +113,37 @@ function removeBookInStorage (book) {
         localStorage.removeItem(`${book.timestamp}:author`);
         localStorage.removeItem(`${book.timestamp}:status`);
         localStorage.removeItem(`${book.timestamp}:pages`);
+    }
+}
+
+function addBooksFromStorage() {
+    if (storageAvailable("localStorage")) {
+        let books = [];
+        let timestamps = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const timestamp = localStorage.key(i).split(":")[0];
+            if (!timestamps.includes(timestamp)) timestamps.push(timestamp);
+        }
+        timestamps.forEach(timestamp => {
+            const empty = "";
+            books.push(new Book(empty, empty, empty, empty, timestamp));
+        });
+        for (let i = 0; i < localStorage.length; i++) {
+            const storageKey = localStorage.key(i);
+            const temp = storageKey.split(":");
+            const timestamp = temp[0];
+            const key = temp[1];
+            const value = localStorage.getItem(storageKey);
+            
+            for (let j = 0; j < books.length; j++) {
+                if (books[j].timestamp === timestamp) {
+                    books[j][key] = value;
+                }
+            }
+        }
+        books.forEach (book => {
+            book.addToLibrary();
+        });
     }
 }
 
@@ -147,7 +179,6 @@ function updateBookInStorage(book) {
         localStorage.setItem(`${book.timestamp}:pages`,book.pages);
         localStorage.setItem(`${book.timestamp}:status`,book.status);
     }
-    console.table(localStorage);
 }
 
 function extractBookElements () {
