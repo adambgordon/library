@@ -6,6 +6,18 @@ html {
     font-family: 'Raleway', sans-serif;
 }
 
+/* For mobile and small windows */
+@media  screen and (max-device-width: 800px) {
+    .heading-left {
+        font-size: 1.5rem !important;
+    }
+
+    .bookshelf {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 .top-nav-wrapper {
     height: 4rem;
     border-bottom: 1px solid rgb(188, 188, 188);
@@ -21,6 +33,7 @@ html {
 
 .heading-left, .heading-right {
     margin: 0 1rem;
+    white-space: nowrap;
 }
 
 .heading-left {

@@ -18,16 +18,11 @@ Book.prototype = Object.create(LibraryItem.prototype);
 initAddNewBookButton();
 initSortButton();
 initModalDialog();
-
-
-// const book1 = new Book ("The Martian", "Andy Weir", 369, "read", 123);
-// const book2 = new Book ("Sapiens", "Yuval Noah Harari", 443, "not read", 124);
-// book1.addToLibrary();
-// book2.addToLibrary();
-
 initBookshelf();
 
 /* FUNCTIONS */
+
+// Adds books to bookshelf DOM element
 function initBookshelf() {
     addBooksFromStorage();
     const bookshelf = document.querySelector(".bookshelf");
@@ -36,12 +31,14 @@ function initBookshelf() {
     });
 }
 
+// Initializes all modal dialogs
 function initModalDialog () {
     initSubmitButton();
     initClickToClose();
     initKeyboardInput();
 }
 
+// Creates and adds DOM elements for a given book
 function addBookToDOM(book) {
     const bookElement = document.createElement("div");
     const remove = document.createElement("div");
@@ -78,7 +75,7 @@ function addBookToDOM(book) {
     edit.onclick = editBook;
 }
 
-
+// Overwrites information for a given book
 function updateBookInDOM(book) {
     const bookElement = document.querySelector(`[id="${book.timestamp}"]`);
     bookElement.querySelector(".title").textContent = book.title;
@@ -107,6 +104,7 @@ function removeBook() {
     book.remove();
 }
 
+// Removes book from local storage
 function removeBookInStorage (book) {
     if(storageAvailable("localStorage")) {
         localStorage.removeItem(`${book.timestamp}:title`);
@@ -116,6 +114,7 @@ function removeBookInStorage (book) {
     }
 }
 
+// Adds all books from local storage to the library
 function addBooksFromStorage() {
     if (storageAvailable("localStorage")) {
         let books = [];
@@ -172,6 +171,7 @@ function submit () {
     }
 }
 
+// Overwrites a book in local storage
 function updateBookInStorage(book) {
     if(storageAvailable("localStorage")) {
         localStorage.setItem(`${book.timestamp}:title`,book.title);
@@ -181,6 +181,7 @@ function updateBookInStorage(book) {
     }
 }
 
+// Returns array of all books in bookshelf DOM element
 function extractBookElements () {
     let books = [];
     const bookshelf = getBookshelfElement();
@@ -190,6 +191,7 @@ function extractBookElements () {
     return books;
 }
 
+// Adds books from given array to bookshelf DOM element
 function attachBookElements(books) {
     const bookshelf = getBookshelfElement();
     for (let i = 0; i < books.length; i++) {
@@ -197,11 +199,13 @@ function attachBookElements(books) {
     }
 }
 
+// Gets bookshelf DOM element
 function getBookshelfElement () {
     return document.querySelector(".bookshelf");
 }
 
 
+// Sorts bookshelf DOM by selected criterion
 function sortBooks() {
     let sorted = extractBookElements();
     switch (getInputSortBy()) {
@@ -237,12 +241,13 @@ function sortBooks() {
     attachBookElements(sorted);
 }
 
-
+// Creates sort drop-down
 function initSortButton() {
     const sortButton = document.querySelector(".sort");
     sortButton.onchange = sortBooks;
 }
 
+// Creates add new book button
 function initAddNewBookButton() {
     const addNewBookButton = document.querySelector(".add-new-book-button");
     addNewBookButton.onclick = () => {
@@ -250,10 +255,14 @@ function initAddNewBookButton() {
         displayModalDialog();
     }
 }
+
+// Creates submit button for modal dialogs
 function initSubmitButton() {
     const submitButton = document.querySelector(".submit");
     submitButton.onclick = submit;
 }
+
+// Creates close button for modal dialogs
 function initClickToClose() {
     const modal = document.querySelector(".modal");
     const close = document.querySelector(".close");
@@ -265,6 +274,8 @@ function initClickToClose() {
         }
     }
 }
+
+// Initializes keyboard inputs to close modal dialogs
 function initKeyboardInput() {
     const modal = document.querySelector(".modal");
     window.onkeydown = function (event) { // make separate fn
@@ -280,43 +291,59 @@ function initKeyboardInput() {
     }
 }
 
-
+// Returns book item in library based on unique timestamp
 function getBookByTimestamp(timestamp) {
     for (let i = 0; i < library.length; i++) {
         if (library[i].timestamp.toString() === timestamp) return library[i];
     }
 }
+
+// Sets timestamp (dictated by modal dialog) opening to empty
 function clearModalTimestamp() {
     setModalTimestamp("");
 }
+
+// Sets timestamp (dictated by modal dialog) to specified value
 function setModalTimestamp(timestamp) {
     document.querySelector(".modal").dataset.timestamp = timestamp;
 }
+
+// Returns timestamp (dictated by modal dialog)
 function getModalTimestamp() {
     let timestamp = document.querySelector(".modal").dataset.timestamp;
     if (typeof(timestamp) === "undefined") timestamp = "";
     return timestamp;
 }
+
+// Unhides modal dialog
 function displayModalDialog() {
     document.querySelector(".modal").style.display = "block";
 }
+
+// Hides modal dialog
 function hideModalDialog() {
     document.querySelector(".modal").style.display = "none";
 }
+
+// Sets submit button text
 function setSubmitButtonText(text) {
     document.querySelector(".submit").textContent = text;
 }
 
+// Gets bookshelf sorting criterion
 function getInputSortBy() {
     return document.querySelector('select[name="sort"]').value;
 }
 
+// Sets all modal dialog inputs to empty/default value
 function clearInputs() {
     setInputTitle("");
     setInputAuthor("");
     setInputPages("");
     setInputStatus("read");
 }
+
+// Sets all modal dialog inputs to book's values
 function setInputs(book) {
     setInputTitle(book.title);
     setInputAuthor(book.author);
@@ -324,36 +351,54 @@ function setInputs(book) {
     setInputStatus(book.status);
     setModalTimestamp(book.timestamp);
 }
+
+// Returns book object based on inputs
 function getInputs() {
     return new Book (getInputTitle(), getInputAuthor(), getInputPages(), getInputStatus(), getModalTimestamp());
 }
+
+// Gets input from modal dialog
 function getInputTitle() {
     return document.querySelector('input[name="title"]').value;
 }
+
+// Gets input from modal dialog
 function getInputAuthor() {
     return document.querySelector('input[name="author"]').value;
 }
+
+// Gets input from modal dialog
 function getInputPages() {
     return document.querySelector('input[name="pages"]').value;
 }
+
+// Gets input from modal dialog
 function getInputStatus() {
     return document.querySelector('select[name="status"]').value;
 }
+
+// Sets modal dialog input to specified string
 function setInputTitle(text) {
     document.querySelector('input[name="title"]').value = text;
 }
+
+// Sets modal dialog input to specified string
 function setInputAuthor(text) {
     document.querySelector('input[name="author"]').value = text;
 }
+
+// Sets modal dialog input to specified string
 function setInputPages(text) {
     document.querySelector('input[name="pages"]').value = text;
 }
+
+// Sets modal dialog input to specified string
 function setInputStatus(text) {
     document.querySelector('select[name="status"]').value = text;
 }
 
 
-
+// Checks if local storage is available
 function storageAvailable(type) {
     var storage;
     try {
